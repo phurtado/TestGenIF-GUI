@@ -47,7 +47,9 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -427,12 +429,23 @@ public class Main {
 			
 			private void ex(/*final StyledText st*/) throws IOException{
 				Thread t = new Thread(){
+					
+				    String[] mapToEnv(Map<String, String> map) {
+				        final String[] envp = new String[map.size()];
+				        int i = 0;
+				        for (Map.Entry<String, String> e : map.entrySet()) {
+				            envp[i] = e.getKey() + '=' + e.getValue();
+				            i++;
+				        }
+				        return envp;
+				    }
+					
 					@Override
 					public void run() {
 						super.run();
 						Process proc = null;
 						String iffile = "";
-						String iffilename = "";
+						String iffilename = "";String iffilenamenoext = "";
 						String depth = "20";
 						String search = "bfs";
 						String purposes = "";
@@ -444,7 +457,8 @@ public class Main {
 					    	    }; 
 						try {
 							iffile = Project.getInstance().getIfModelPath();
-							iffilename = Paths.get(iffile).getFileName().toString();
+							iffilename = Paths.get(iffile).getFileName().toString();							
+							iffilenamenoext = iffilename.substring(0, iffilename.lastIndexOf('.'));
 							Files.copy(Paths.get(iffile), Paths.get(Project.getInstance().getIfWorkingPath() + "/" + iffilename),options);
 							if(!Files.exists(Paths.get(Project.getInstance().getIfWorkingPath() + "/tmp/"))){
 								Files.createDirectory(Paths.get(Project.getInstance().getIfWorkingPath() + "/tmp/"));
@@ -464,9 +478,14 @@ public class Main {
 							e1.printStackTrace();
 						}
 						
-						String[] cmd = { Project.getInstance().getIfWorkingPath() + "/start-generation.sh","-f","\""+iffile+"\"","-d",depth,"-s",search,"-p","tmp/tps/","-c","\""+outfolder +"\""};
+						String[] cmd = { Project.getInstance().getIfWorkingPath() + "/start-generation.sh","-f",iffilenamenoext,"-d",depth,"-s",search,"-p","tmp/tps/","-c","\""+outfolder +"\""};
 						try {
-							String[] envp = new String[]{};
+							final HashMap<String, String> env = new HashMap<String, String>(System.getenv());
+					        env.put("PATH", "/home/pani/TestGen_IF/TestGen-IF/testgen-if/lib:/home/pani/TestGen_IF/TestGen-IF/IF-2.0/src/simulator:/home/pani/TestGen_IF/TestGen-IF/IF-2.0/bin/iX86:/home/pani/TestGen_IF/TestGen-IF/IF-2.0/com:" + env.get("PATH"));
+					        env.put("IF", "/home/pani/TestGen_IF/TestGen-IF/IF-2.0");
+					        env.put("TestGenIF","/home/pani/TestGen_IF/TestGen-IF/testgen-if");
+
+					        final String[] envp=mapToEnv(env);
 							proc = Runtime.getRuntime().exec(cmd,envp,new File(Project.getInstance().getIfWorkingPath()));
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
