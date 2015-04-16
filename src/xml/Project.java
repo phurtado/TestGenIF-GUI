@@ -126,23 +126,33 @@ public class Project {
 		String desc = "";
 		String fdef = "";
 		String tpf = "";
+		String current = "";
 		while(xsr.hasNext() && level > 0){
 			int ev3 = xsr.next();
 			switch(ev3){
 				case XMLStreamConstants.START_ELEMENT:
 					level++;
 					String lcn3 = xsr.getLocalName();
+					current = xsr.getLocalName();
 					
 					if(lcn3.equals("description")) {
 						ev3 = xsr.next();
-						if(ev3 == XMLStreamConstants.CHARACTERS) desc=xsr.getText().trim();
+						if(ev3 == XMLStreamConstants.CHARACTERS) desc=xsr.getText();
 					}
 					else if (lcn3.equals("formaldef")){
 						ev3 = xsr.next();
-						if(ev3 == XMLStreamConstants.CHARACTERS) fdef=xsr.getText().trim();
+						if(ev3 == XMLStreamConstants.CHARACTERS) fdef=xsr.getText();
 					}
 					else if (lcn3.equals("tpfile")){
 						tpf = xsr.getAttributeValue(null,"src");
+					}
+					break;
+				case XMLStreamConstants.CHARACTERS:
+					if(current.equals("description")) {
+						desc+=xsr.getText();
+					}
+					else if (current.equals("formaldef")){
+						fdef+=xsr.getText();
 					}
 					break;
 				case XMLStreamConstants.END_ELEMENT:

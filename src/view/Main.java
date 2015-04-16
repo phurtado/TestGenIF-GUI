@@ -449,7 +449,7 @@ public class Main {
 						String depth = "20";
 						String search = "bfs";
 						String purposes = "";
-						String outfolder = "tmp/tcs/";
+						String outfolder = Project.getInstance().getIfWorkingPath() + "/tmp/tcs";
 						
 					    CopyOption[] options = new CopyOption[]{
 					    	      StandardCopyOption.REPLACE_EXISTING,
@@ -478,7 +478,7 @@ public class Main {
 							e1.printStackTrace();
 						}
 						
-						String[] cmd = { Project.getInstance().getIfWorkingPath() + "/start-generation.sh","-f",iffilenamenoext,"-d",depth,"-s",search,"-p","tmp/tps/","-c","\""+outfolder +"\""};
+						String[] cmd = { Project.getInstance().getIfWorkingPath() + "/start-generation.sh","-f",iffilenamenoext,"-d",depth,"-s",search,"-p","tmp/tps/","-c",outfolder};
 						try {
 							final HashMap<String, String> env = new HashMap<String, String>(System.getenv());
 					        env.put("PATH", "/home/pani/TestGen_IF/TestGen-IF/testgen-if/lib:/home/pani/TestGen_IF/TestGen-IF/IF-2.0/src/simulator:/home/pani/TestGen_IF/TestGen-IF/IF-2.0/bin/iX86:/home/pani/TestGen_IF/TestGen-IF/IF-2.0/com:" + env.get("PATH"));
