@@ -31,6 +31,8 @@ public class Project {
 	private String imgPath;
 	private String ifModelPath;
 	private String ifWorkingPath;
+	private String testgenIfBasePath;
+	private String ifPath;
 	
 	private static Project instance = null;
 	
@@ -39,6 +41,8 @@ public class Project {
 		this.imgPath = "";
 		this.ifModelPath = "";
 		this.ifWorkingPath = "";
+		this.testgenIfBasePath = "";
+		this.ifPath = "";
 		
 	}
 	
@@ -62,7 +66,9 @@ public class Project {
 	}
 	
 	public String getIfWorkingPath(){
-		return this.ifWorkingPath;
+
+		if(this.ifWorkingPath.equals("")) return this.testgenIfBasePath + "/working";
+		else return this.ifWorkingPath;
 	}
 	
 	public static void parseProjectFile(String file) throws XMLStreamException, FactoryConfigurationError, FileNotFoundException{	
@@ -85,6 +91,12 @@ public class Project {
 					}
 					else if(lcn.equals("ifworkingpath")) {
 						p.ifWorkingPath = xsr.getAttributeValue(null,"src");
+					}
+					else if(lcn.equals("testgenifbasepath")) {
+						p.testgenIfBasePath = xsr.getAttributeValue(null,"src");
+					}
+					else if(lcn.equals("ifpath")) {
+						p.ifPath = xsr.getAttributeValue(null,"src");
 					}
 					break;
 				case XMLStreamConstants.CHARACTERS:
@@ -176,6 +188,12 @@ public class Project {
 	  		 	writer.writeStartElement("ifworkingpath");
 			 		writer.writeAttribute("src", instance.ifWorkingPath);
 			 	writer.writeEndElement();
+	  		 	writer.writeStartElement("testgenifbasepath");
+			 		writer.writeAttribute("src", instance.testgenIfBasePath);
+			 	writer.writeEndElement();
+	  		 	writer.writeStartElement("ifpath");
+			 		writer.writeAttribute("src", instance.ifPath);
+			 	writer.writeEndElement();
      		 	writer.writeStartElement("image");
      		 		writer.writeAttribute("src", instance.imgPath);
      		 	writer.writeEndElement();
@@ -229,7 +247,36 @@ public class Project {
 	}
 	
 	public void setIfWorkingPath(String path) {
-		this.ifWorkingPath = path;
-		
+		this.ifWorkingPath = path;		
+	}
+	
+	public void setTestgenIfBasePath(String path) {
+		this.testgenIfBasePath = path;
+	}
+	
+	public String getTestgenIfBasePath() {
+		return this.testgenIfBasePath;
+	}
+	
+	public String getTestgenIfComPath(){
+		return this.testgenIfBasePath+"/com";
+	}
+	public String getTestgenIfLibPath(){
+		return this.testgenIfBasePath+"/lib";
+	}
+	
+	public String getIfSimulatorPath(){
+		return this.ifPath+"/src/simulator";
+	}
+	public String getIfBinArchPath(){
+		return this.ifPath+"/bin/iX86";
+	}
+
+	public void setIfPath(String path) {
+		this.ifPath = path;		
+	}
+	
+	public String getIfPath() {
+		return this.ifPath;
 	}
 }

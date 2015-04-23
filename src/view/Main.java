@@ -481,9 +481,15 @@ public class Main {
 						String[] cmd = { Project.getInstance().getIfWorkingPath() + "/start-generation.sh","-f",iffilenamenoext,"-d",depth,"-s",search,"-p","tmp/tps/","-c",outfolder};
 						try {
 							final HashMap<String, String> env = new HashMap<String, String>(System.getenv());
-					        env.put("PATH", "/home/pani/TestGen_IF/TestGen-IF/testgen-if/lib:/home/pani/TestGen_IF/TestGen-IF/IF-2.0/src/simulator:/home/pani/TestGen_IF/TestGen-IF/IF-2.0/bin/iX86:/home/pani/TestGen_IF/TestGen-IF/IF-2.0/com:" + env.get("PATH"));
-					        env.put("IF", "/home/pani/TestGen_IF/TestGen-IF/IF-2.0");
-					        env.put("TestGenIF","/home/pani/TestGen_IF/TestGen-IF/testgen-if");
+					        //String pathstr = "/home/pani/TestGen_IF/TestGen-IF/testgen-if/lib" + ":" + "/home/pani/TestGen_IF/TestGen-IF/IF-2.0/src/simulator" + ":" + "/home/pani/TestGen_IF/TestGen-IF/IF-2.0/bin/iX86" + ":" + "/home/pani/TestGen_IF/TestGen-IF/IF-2.0/com" + ":" + env.get("PATH");
+							String pathstr = Project.getInstance().getTestgenIfLibPath() + ":" 
+											+ Project.getInstance().getIfSimulatorPath() + ":" 
+											+ Project.getInstance().getIfBinArchPath() + ":" 
+											+ Project.getInstance().getTestgenIfComPath() + ":" 
+											+ env.get("PATH");
+							env.put("PATH", pathstr);
+					        env.put("IF", Project.getInstance().getIfPath());
+					        env.put("TestGenIF",Project.getInstance().getTestgenIfBasePath());
 
 					        final String[] envp=mapToEnv(env);
 							proc = Runtime.getRuntime().exec(cmd,envp,new File(Project.getInstance().getIfWorkingPath()));
@@ -520,7 +526,14 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				try {
-					ex();
+					if(!Project.getInstance().getIfPath().isEmpty() && !Project.getInstance().getTestgenIfBasePath().isEmpty()){
+						ex();	
+					}
+					else{
+						JOptionPane.showMessageDialog(frmTestgenif,
+								"Please set up paths for IF-2.0 and TestGen-IF in the configuration dialog.","Invalid configuration",
+								JOptionPane.ERROR_MESSAGE);		
+					}					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
