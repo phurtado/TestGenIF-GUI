@@ -22,6 +22,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JTextField;
 
+import java.util.Arrays;
+
 import model.IFModel;
 import model.IFState;
 
@@ -76,6 +78,8 @@ public class NewTestPurposeTransitionWindow extends JDialog {
 			gbc_cbSource.gridx = 0;
 			gbc_cbSource.gridy = 1;
 			
+			
+			
 			DefaultComboBoxModel<IFState> dc = new DefaultComboBoxModel<IFState>(
 					this.model.getIfStates().toArray(
 							new IFState[this.model.getIfStates().size()]
@@ -103,11 +107,10 @@ public class NewTestPurposeTransitionWindow extends JDialog {
 			gbc_cbTarget.gridx = 0;
 			gbc_cbTarget.gridy = 3;
 			
-			DefaultComboBoxModel<IFState> dc = new DefaultComboBoxModel<IFState>(
-					this.model.getIfStates().toArray(
-							new IFState[this.model.getIfStates().size()]
-					)
+			IFState[] states = this.model.getIfStates().toArray(
+					new IFState[this.model.getIfStates().size()]
 			);
+			DefaultComboBoxModel<IFState> dc = new DefaultComboBoxModel<IFState>(states);
 			cbTarget.setModel(dc);
 			
 			
